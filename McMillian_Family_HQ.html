@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>McMillian Family HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ivory:#F9F7F3;--paper:#F2EFE9;--line:#E0DBD3;--muted:#A39990;--brown:#6B5E56;--ink:#1A1614;--white:#FFFFFF;--success:#4A7C59;--warn:#B5714A;--danger:#A33030;--gold:#9E7A3F;--info:#3A6EA5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased}
+.app{max-width:820px;margin:0 auto;padding:0 16px 60px}
+.hdr{padding:40px 0 28px;border-bottom:2px solid var(--ink)}
+.hdr-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.hdr-title{font-family:'Playfair Display',serif;font-size:clamp(40px,10vw,72px);font-weight:900;line-height:.95;color:var(--ink);letter-spacing:-1px}
+.hdr-title em{font-style:italic;font-weight:400}
+.hdr-bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:8px}
+.hdr-date{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.hdr-status{display:flex;gap:8px;flex-wrap:wrap}
+.status-pill{font-size:10px;font-weight:500;letter-spacing:.5px;padding:4px 12px;border:1px solid var(--line);border-radius:100px;color:var(--brown)}
+
+/* BRIEF LINK — the big CTA */
+.brief-cta{background:var(--ink);color:var(--ivory);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-decoration:none;margin-bottom:1px;transition:background .15s}
+.brief-cta:hover{background:var(--brown)}
+.brief-left{flex:1}
+.brief-eye{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px}
+.brief-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.brief-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.brief-arrow{font-size:20px;flex-shrink:0;opacity:.6}
+
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:28px;overflow-x:auto;scrollbar-width:none;gap:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:14px 20px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.panel{display:none;animation:up .25s ease}
+.panel.active{display:block}
+@keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(max-width:460px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.g-cell{background:var(--white);padding:18px}
+.sh{display:flex;align-items:baseline;justify-content:space-between;padding:20px 0 14px;border-bottom:1px solid var(--line);margin-bottom:0}
+.sh-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink)}
+.sh-link{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.sh-link:hover{color:var(--ink)}
+.lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
+.big-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--ink);line-height:1}
+.sub-text{font-size:11px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;font-size:9px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.t-green{background:#EAF2EC;color:var(--success)}
+.t-warn{background:#F5EDE5;color:var(--warn)}
+.t-gold{background:#F4EEE2;color:var(--gold)}
+.t-muted{background:var(--paper);color:var(--muted)}
+.t-ink{background:var(--ink);color:var(--ivory)}
+.t-info{background:#E8EFF6;color:var(--info)}
+.t-danger{background:#FAECEC;color:var(--danger)}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.row-body{flex:1}
+.row-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.3}
+.row-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.row-right{flex-shrink:0;text-align:right}
+.task{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:none}
+.tbox{width:17px;height:17px;border:1.5px solid var(--line);border-radius:3px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s;margin-top:2px}
+.tbox.done{background:var(--ink);border-color:var(--ink);color:var(--ivory)}
+.tbody{flex:1}
+.tname{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4}
+.tname.done{text-decoration:line-through;color:var(--muted)}
+.tmeta{font-size:11px;color:var(--muted);margin-top:2px}
+.tbadge{font-size:9px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;flex-shrink:0}
+.tb-hot{background:var(--ink);color:var(--ivory)}
+.tb-soon{background:var(--paper);color:var(--brown);border:1px solid var(--line)}
+.tb-low{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.prog{margin:10px 0}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+.prog-track{height:3px;background:var(--line);overflow:hidden}
+.prog-fill{height:100%;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.bill{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.bill:last-child{border-bottom:none}
+.bill-ic{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.bill-name{font-size:13px;font-weight:500;flex:1}
+.bill-due{font-size:11px;color:var(--muted)}
+.bill-amt{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;flex-shrink:0}
+.ai-wrap{border:1px solid var(--line);background:var(--white);padding:20px;margin-bottom:1px}
+.ai-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ai-av{width:30px;height:30px;background:var(--ink);color:var(--ivory);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;flex-shrink:0}
+.ai-name{font-size:12px;font-weight:500;color:var(--ink)}
+.ai-role{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.ai-tip{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:var(--brown);line-height:1.7;margin-bottom:16px;min-height:44px;transition:opacity .4s}
+.ai-row{display:flex;gap:8px}
+.ai-in{flex:1;background:var(--ivory);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none}
+.ai-in:focus{border-color:var(--brown)}
+.ai-in::placeholder{color:var(--muted)}
+.ai-btn{background:var(--ink);border:none;padding:10px 20px;color:var(--ivory);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.ai-btn:hover{background:var(--brown)}
+.ai-resp{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:var(--brown);line-height:1.7;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);display:none}
+.quote-strip{background:var(--ink);color:var(--ivory);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:0}
+.quote-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.5}
+.quote-attr{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);flex-shrink:0}
+.prop{border:1px solid var(--line);background:var(--white);padding:18px;margin-bottom:1px}
+.prop-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.prop-name{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--ink)}
+.prop-detail{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.prop-detail strong{color:var(--ink);font-weight:500}
+.prop-btns{display:flex;gap:6px;flex-wrap:wrap}
+.prop-btn{font-size:10px;letter-spacing:.3px;padding:4px 12px;border:1px solid var(--line);background:transparent;color:var(--brown);cursor:pointer;font-family:'DM Sans',sans-serif}
+.prop-btn:hover{background:var(--paper)}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;margin-top:12px}
+.cal-hd{text-align:center;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:6px 0;font-weight:500}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:var(--ink);position:relative;transition:background .1s;border-radius:2px}
+.cal-d:hover{background:var(--paper)}
+.cal-d.today{background:var(--ink);color:var(--ivory);font-weight:700}
+.cal-d.has-ev::after{content:'';position:absolute;bottom:3px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
+.cal-d.today.has-ev::after{background:rgba(255,255,255,.5)}
+.cal-d.empty{pointer-events:none;color:transparent}
+.ev-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.ev-item:last-child{border-bottom:none}
+.ev-line{width:2px;flex-shrink:0;align-self:stretch;min-height:28px}
+.ev-name{font-size:13px;font-weight:500}
+.ev-date{font-size:11px;color:var(--muted);margin-top:1px}
+.shop-bar{display:flex;gap:0;margin-bottom:20px;border:1px solid var(--line)}
+.shop-in{flex:1;background:var(--white);border:none;padding:12px 14px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none}
+.shop-add{background:var(--ink);border:none;padding:12px 20px;color:var(--ivory);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif}
+.shop-sec-title{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:500;padding:16px 0 10px;border-bottom:1px solid var(--line)}
+.si{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.si:last-child{border-bottom:none}
+.sbox{width:16px;height:16px;border:1.5px solid var(--line);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .15s}
+.sbox.got{background:var(--ink);border-color:var(--ink);color:var(--ivory)}
+.sn{flex:1;font-size:13px}
+.sn.got{text-decoration:line-through;color:var(--muted)}
+.sp{font-size:11px;color:var(--muted)}
+.cls{border:1px solid var(--line);background:var(--white);padding:18px;margin-bottom:1px}
+.cls-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.cls-sub{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.dl{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.dl:last-child{border-bottom:none}
+.dl-name{flex:1;font-size:13px}
+.dl-date{font-size:11px;color:var(--muted);flex-shrink:0}
+.dl-hot{color:var(--warn);font-weight:600}
+.add-row{padding:12px 0;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-top:1px solid var(--line)}
+.add-row:hover{color:var(--ink)}
+.sp20{height:20px}
+.sp28{height:28px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hdr">
+    <div class="hdr-eyebrow">Family Command Center · Raleigh, NC</div>
+    <div class="hdr-title">McMillian<br><em>Family HQ</em></div>
+    <div class="hdr-bottom">
+      <div class="hdr-date" id="dateEl"></div>
+      <div class="hdr-status">
+        <span class="status-pill">Kamari & Brianna</span>
+        <span class="status-pill">June 1 target</span>
+        <span class="status-pill">13 tasks running</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIANNA'S BRIEF CTA -->
+  <a class="brief-cta" href="brief.html">
+    <div class="brief-left">
+      <div class="brief-eye">Your attention dashboard</div>
+      <div class="brief-title">Brianna's Brief</div>
+      <div class="brief-sub">Everything that needs you right now — with latest Duckbill updates</div>
+    </div>
+    <div class="brief-arrow">→</div>
+  </a>
+
+  <div class="sp20"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('home',this)">Home</div>
+    <div class="tab" onclick="switchTab('housing',this)">Housing</div>
+    <div class="tab" onclick="switchTab('budget',this)">Budget</div>
+    <div class="tab" onclick="switchTab('school',this)">School</div>
+    <div class="tab" onclick="switchTab('family',this)">Family</div>
+    <div class="tab" onclick="switchTab('shop',this)">Shopping</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="panel active" id="panel-home">
+    <div class="ai-wrap">
+      <div class="ai-hdr">
+        <div class="ai-av">B</div>
+        <div><div class="ai-name">Bri — McMillian Family Assistant</div><div class="ai-role">Powered by Claude · Always on</div></div>
+      </div>
+      <div class="ai-tip" id="aiTip">"Nationwide Guarantors confirmed tonight: 570 credit is not a factor. Income-driven only. You qualify. Landis gets called tomorrow. You are closer than you feel."</div>
+      <div class="ai-row">
+        <input class="ai-in" id="aiQ" placeholder="Ask me anything about budget, housing, school..." onkeydown="if(event.key==='Enter')askAI()"/>
+        <button class="ai-btn" onclick="askAI()">Ask</button>
+      </div>
+      <div class="ai-resp" id="aiR"></div>
+    </div>
+
+    <div class="quote-strip">
+      <div class="quote-text">"We had a hard year. We handled it. We're ready."</div>
+      <div class="quote-attr">Operation New Home · 2026</div>
+    </div>
+
+    <div class="sp28"></div>
+
+    <div class="g3">
+      <div class="g-cell"><div class="lbl">Monthly Income</div><div class="big-num">$5,417</div><div class="sub-text">Kamari · Chef</div></div>
+      <div class="g-cell"><div class="lbl">Active Tasks</div><div class="big-num">13</div><div class="sub-text">Running overnight</div></div>
+      <div class="g-cell"><div class="lbl">Move Target</div><div class="big-num" style="font-size:26px">June 1</div><div class="sub-text">2026</div></div>
+    </div>
+
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Housing</div><span class="sh-link" onclick="switchTabByName('housing')">View all →</span></div>
+    <div class="row"><div class="row-dot" style="background:var(--danger)"></div><div class="row-body"><div class="row-name">Autumn Ridge</div><div class="row-meta">Hard no — auto denial</div></div><span class="tag t-danger">Closed</span></div>
+    <div class="row"><div class="row-dot" style="background:var(--success)"></div><div class="row-body"><div class="row-name">Nationwide Guarantors</div><div class="row-meta">Confirmed tonight — income-driven only, 570 not a factor</div></div><span class="tag t-green">Green Light</span></div>
+    <div class="row"><div class="row-dot" style="background:var(--gold)"></div><div class="row-body"><div class="row-name">Edwards Mill · Conclave · Fox Crossing</div><div class="row-meta">Calling tomorrow AM</div></div><span class="tag t-gold">Pending</span></div>
+    <div class="row"><div class="row-dot" style="background:var(--ink)"></div><div class="row-body"><div class="row-name">Landis Rent-to-Own ✦</div><div class="row-meta">Qualifies now · Duckbill calling tomorrow · June 1 + homeownership path</div></div><span class="tag t-ink">Priority #1</span></div>
+
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Today's Focus</div></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Sign up for LegalShield — legalshield.com</div><div class="tmeta">$35/mo · Start the 30-day clock tonight</div></div><span class="tbadge tb-hot">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Save all 10 ledger screenshots into one album</div><div class="tmeta">"Ammons Pittman Ledger 2022–2026"</div></div><span class="tbadge tb-hot">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Brief Kamari on the full housing plan</div><div class="tmeta">Show him dashboard + Duckbill tasks + Landis option</div></div><span class="tbadge tb-hot">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Apply to Landis — landis.com — free, no credit impact</div><div class="tmeta">Start application tonight before Duckbill calls them tomorrow</div></div><span class="tbadge tb-soon">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">HRM Unit Test 4 — Chapters 10 & 11</div><div class="tmeta">Blackboard · Due April 5 · Block Saturday AM to study</div></div><span class="tbadge tb-hot">Apr 5</span></div>
+  </div>
+
+  <!-- HOUSING -->
+  <div class="panel" id="panel-housing">
+    <div class="sh"><div class="sh-title">Mission Progress</div></div>
+    <div class="prog" style="padding:16px 0">
+      <div class="prog-lbl"><span>Operation New Home · June 1, 2026</span><span>20%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:20%;background:var(--ink)"></div></div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--line)">
+      <span class="tag t-green">Income verified</span>
+      <span class="tag t-green">Packet ready</span>
+      <span class="tag t-green">Nationwide confirmed</span>
+      <span class="tag t-gold">Landis calling tomorrow</span>
+      <span class="tag t-muted">13 tasks active</span>
+    </div>
+
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Best Paths to Yes</div></div>
+
+    <div class="prop" style="border-color:var(--ink)">
+      <div class="prop-top"><div class="prop-name">Landis Rent-to-Own ✦</div><span class="tag t-ink">Priority #1</span></div>
+      <div class="prop-detail"><strong>Qualifies now:</strong> 570 credit ✓ · $65k income ✓ · NC state ✓ · No bankruptcies ✓<br>They buy the home, you rent it, then purchase it. 2–3% upfront. Homeownership coach. June 1 feasible. Duckbill calling tomorrow to confirm everything.</div>
+      <div class="prop-btns"><span class="prop-btn">landis.com</span><span class="prop-btn">Apply free tonight</span><span class="prop-btn">Duckbill calling tomorrow</span></div>
+    </div>
+
+    <div class="prop">
+      <div class="prop-top"><div class="prop-name">Nationwide Guarantors</div><span class="tag t-green">Confirmed Tonight ✓</span></div>
+      <div class="prop-detail"><strong>570 credit = not a factor.</strong> Income-driven only. Judgment = case by case review. Fee = one month's rent upfront. Decision in under 24hrs. Bring to any willing landlord. Complete free pre-screen first.</div>
+      <div class="prop-btns"><span class="prop-btn">nationwideguarantors.com</span><span class="prop-btn">Free pre-screen</span><span class="prop-btn">Upload income docs</span></div>
+    </div>
+
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Properties</div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">Autumn Ridge</div><span class="tag t-danger">Hard No</span></div><div class="prop-detail">6100 Barrowood Dr · 27612. Auto denial for any eviction filing. Removed from list.</div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">Edwards Mill Townhomes</div><span class="tag t-gold">Calling Tomorrow</span></div><div class="prop-detail">4301 Mill Village Rd · 27612 · Starting $1,535/mo · 2BD/2.5BA · $250 off move-in</div><div class="prop-btns"><span class="prop-btn">919-729-6295</span><span class="prop-btn">OneApp TBD</span></div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">Conclave Glenwood</div><span class="tag t-gold">Email Sent</span></div><div class="prop-detail">3221 Glenhill Dr · 27612 · Starting $1,699/mo · 80% AMI · Income fits under $83,400 cap ✓</div><div class="prop-btns"><span class="prop-btn">855-419-4780</span><span class="prop-btn">OneApp likely</span></div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">Fox Crossing Durham</div><span class="tag t-gold">Call 8:30AM</span></div><div class="prop-detail">514 Pleasant Dr · Durham 27703 · Starting $1,286/mo · 1 Month FREE · Prior applicant</div><div class="prop-btns"><span class="prop-btn">984-316-1220</span></div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">Autumn Pointe · Tree Top · Perry Hill</div><span class="tag t-info">Second Chance</span></div><div class="prop-detail">All 3 on Wake County second-chance lists. Perry Hill (984-367-9904) is income-restricted — most flexible. Tree Top (919-746-7988) · Autumn Pointe (919-737-7203). Calls queued.</div></div>
+
+    <div class="prop"><div class="prop-top"><div class="prop-name">4 Private Landlords — 27615 / 27616</div><span class="tag t-gold">Send Packet This Weekend</span></div>
+    <div class="prop-detail">
+      <strong>9005 Grassington Way</strong> — $1,750 · (984) 265-8556<br>
+      <strong>130 Wythe Cir</strong> — $1,765 · (984) 253-4505<br>
+      <strong>8011 Allyns Landing Way #201</strong> — $1,595 · (984) 276-4845<br>
+      <strong>2960 Berkeley Springs Pl</strong> — $1,650 · HotPads<br>
+      Human decisions. No automated software. Send full packet this weekend.
+    </div></div>
+
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Income Qualification</div></div>
+    <div class="row"><div class="row-body"><div class="row-name">Kamari annual gross</div></div><div class="row-right"><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700">$65,000</div></div></div>
+    <div class="row"><div class="row-body"><div class="row-name">Monthly gross</div></div><div class="row-right"><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700">$5,417</div></div></div>
+    <div class="row"><div class="row-body"><div class="row-name">Max rent at 2.7× rule</div></div><div class="row-right"><span class="tag t-green">~$2,006/mo</span></div></div>
+    <div class="row"><div class="row-body"><div class="row-name">AMI cap — Conclave Glenwood</div></div><div class="row-right"><span class="tag t-green">Under $83,400 ✓</span></div></div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="panel" id="panel-budget">
+    <div class="g2" style="margin-bottom:1px">
+      <div class="g-cell"><div class="lbl">Monthly Income</div><div class="big-num">$5,417</div><div class="sub-text">Kamari · Executive Chef</div></div>
+      <div class="g-cell"><div class="lbl">Weekly Savings Target</div><div class="big-num">$400</div><div class="sub-text">Moving fund</div></div>
+    </div>
+    <div class="g-cell" style="border:1px solid var(--line);background:var(--white)">
+      <div class="lbl" style="margin-bottom:12px">Moving Fund Progress</div>
+      <div class="prog">
+        <div class="prog-lbl"><span>Saved so far</span><span id="sPct">0%</span></div>
+        <div class="prog-track"><div class="prog-fill" id="sFill" style="width:0%;background:var(--ink)"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+        <span style="font-size:11px;color:var(--muted)">Enter amount saved:</span>
+        <input type="number" id="sAmt" placeholder="0" style="background:var(--ivory);border:1px solid var(--line);padding:6px 10px;font-size:13px;color:var(--ink);width:100px;font-family:'DM Sans',sans-serif;outline:none" oninput="updateSavings()"/>
+        <span style="font-size:11px;color:var(--muted)">Goal: $3,500</span>
+      </div>
+    </div>
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Bills & Due Dates</div></div>
+    <div class="bill"><div class="bill-ic">🏠</div><div style="flex:1"><div class="bill-name">Rent — Ammons Pittman</div><div class="bill-due">Due 1st of month</div></div><div class="bill-amt">$1,895</div></div>
+    <div class="bill"><div class="bill-ic">💡</div><div style="flex:1"><div class="bill-name">Electric — Duke Energy</div><div class="bill-due">Due ~15th</div></div><div class="bill-amt">~$120</div></div>
+    <div class="bill"><div class="bill-ic">📱</div><div style="flex:1"><div class="bill-name">Phone</div><div class="bill-due">Due ~20th</div></div><div class="bill-amt">~$80</div></div>
+    <div class="bill"><div class="bill-ic">⚖️</div><div style="flex:1"><div class="bill-name">LegalShield</div><div class="bill-due">Sign up tonight!</div></div><div class="bill-amt">$35</div></div>
+    <div class="bill"><div class="bill-ic">✨</div><div style="flex:1"><div class="bill-name">Claude Pro</div><div class="bill-due">Monthly</div></div><div class="bill-amt">$20</div></div>
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Profit First</div></div>
+    <div style="padding:16px 0">
+      <div class="prog"><div class="prog-lbl"><span>Rent (35%)</span><span>$1,895</span></div><div class="prog-track"><div class="prog-fill" style="width:35%;background:var(--ink)"></div></div></div>
+      <div class="prog"><div class="prog-lbl"><span>Bills (10%)</span><span>~$541</span></div><div class="prog-track"><div class="prog-fill" style="width:10%;background:var(--brown)"></div></div></div>
+      <div class="prog"><div class="prog-lbl"><span>Moving Fund (30%)</span><span>$1,625</span></div><div class="prog-track"><div class="prog-fill" style="width:30%;background:var(--gold)"></div></div></div>
+      <div class="prog"><div class="prog-lbl"><span>Life (25%)</span><span>$1,354</span></div><div class="prog-track"><div class="prog-fill" style="width:25%;background:var(--muted)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- SCHOOL -->
+  <div class="panel" id="panel-school">
+    <div class="g-cell" style="border:1px solid var(--line);background:var(--white);margin-bottom:1px">
+      <div class="lbl">Wake Technical Community College</div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin:4px 0">Associate's in HR Management</div>
+      <div style="font-size:11px;color:var(--muted)">Spring 2026 · Full-time · 4 courses</div>
+    </div>
+    <div class="cls"><div class="cls-name">Compensation & Benefits</div><div class="cls-sub">HRM · Spring 2026</div><div class="dl"><div class="dl-name">Unit Test 4 — Chapters 10 & 11</div><div class="dl-date dl-hot">Apr 5 !</div></div><div class="dl"><div class="dl-name">Blackboard Assignment</div><div class="dl-date dl-hot">Apr 5 !</div></div></div>
+    <div class="cls"><div class="cls-name">Human Resource Management</div><div class="cls-sub">HRM · Spring 2026</div><div class="dl"><div class="dl-name">Chapters 10–11 reading</div><div class="dl-date">This week</div></div></div>
+    <div class="cls"><div class="cls-name">Office Procedures</div><div class="cls-sub">Spring 2026</div><div class="dl"><div class="dl-name">No urgent deadlines</div><div class="dl-date" style="color:var(--success)">Clear ✓</div></div></div>
+    <div class="cls"><div class="cls-name">Student Success Strategies</div><div class="cls-sub">Spring 2026</div><div class="dl"><div class="dl-name">No urgent deadlines</div><div class="dl-date" style="color:var(--success)">Clear ✓</div></div></div>
+    <div class="quote-strip" style="margin-top:1px"><div class="quote-text">"Unit Test 4 covers performance appraisal and incentive pay. Block Saturday morning. You know this material."</div><div class="quote-attr">Bri · Study note</div></div>
+  </div>
+
+  <!-- FAMILY -->
+  <div class="panel" id="panel-family">
+    <div class="g-cell" style="border:1px solid var(--line);background:var(--white)">
+      <div class="lbl" style="margin-bottom:12px">April 2026</div>
+      <div class="cal-g">
+        <div class="cal-hd">Su</div><div class="cal-hd">Mo</div><div class="cal-hd">Tu</div><div class="cal-hd">We</div><div class="cal-hd">Th</div><div class="cal-hd">Fr</div><div class="cal-hd">Sa</div>
+        <div class="cal-d empty">·</div><div class="cal-d empty">·</div><div class="cal-d today has-ev">2</div><div class="cal-d has-ev">3</div><div class="cal-d">4</div><div class="cal-d has-ev">5</div><div class="cal-d">6</div>
+        <div class="cal-d has-ev">7</div><div class="cal-d">8</div><div class="cal-d">9</div><div class="cal-d">10</div><div class="cal-d has-ev">11</div><div class="cal-d">12</div><div class="cal-d">13</div>
+        <div class="cal-d has-ev">14</div><div class="cal-d has-ev">15</div><div class="cal-d has-ev">16</div><div class="cal-d">17</div><div class="cal-d">18</div><div class="cal-d">19</div><div class="cal-d">20</div>
+        <div class="cal-d">21</div><div class="cal-d">22</div><div class="cal-d">23</div><div class="cal-d has-ev">24</div><div class="cal-d">25</div><div class="cal-d">26</div><div class="cal-d">27</div>
+        <div class="cal-d">28</div><div class="cal-d">29</div><div class="cal-d has-ev">30</div>
+      </div>
+    </div>
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Upcoming</div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--warn)"></div><div><div class="ev-name">HRM Unit Test 4 + Blackboard Assignment Due</div><div class="ev-date">April 5</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--gold)"></div><div><div class="ev-name">Duckbill — all property calls + Landis</div><div class="ev-date">April 3 · Monday AM</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--gold)"></div><div><div class="ev-name">Check Landis + all Duckbill results</div><div class="ev-date">April 4 · Saturday</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--muted)"></div><div><div class="ev-name">Apply to all properties · Canva Create Keynote</div><div class="ev-date">April 14–18</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--success)"></div><div><div class="ev-name">Secure apartment · Give 30-day notice</div><div class="ev-date">April 24–29</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--brown)"></div><div><div class="ev-name">Briana Noel Baby Shower — "Our Little Honey"</div><div class="ev-date">June 7, 2026</div></div></div>
+    <div class="ev-item"><div class="ev-line" style="background:var(--ink)"></div><div><div class="ev-name">Move-In Day 🏠</div><div class="ev-date">June 1, 2026</div></div></div>
+    <div class="sp28"></div>
+    <div class="sh"><div class="sh-title">Family Tasks</div></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">LegalShield signup — legalshield.com · $35/mo</div><div class="tmeta">Tonight · 30-day clock starts now</div></div><span class="tbadge tb-hot">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Brief Kamari — full housing plan</div><div class="tmeta">Dashboard + Duckbill results + Landis option</div></div><span class="tbadge tb-hot">Tonight</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Kamari — employment letter from Georgio's</div><div class="tmeta">Company letterhead · Income verification</div></div><span class="tbadge tb-soon">This week</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Set up Kamari's direct deposit to new account</div><div class="tmeta">Building bank history</div></div><span class="tbadge tb-soon">ASAP</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Aqua-Tots swim trial — book for your son</div><div class="tmeta">Coach Ruthie · 919-447-1100 · Mon/Wed/Thu AM · $308/mo</div></div><span class="tbadge tb-low">When ready</span></div>
+    <div class="task"><div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">Summer family vacation — start planning</div><div class="tmeta">Target July/August 2026</div></div><span class="tbadge tb-low">Later</span></div>
+    <div class="add-row" onclick="addFamilyTask()">+ Add task</div>
+  </div>
+
+  <!-- SHOPPING -->
+  <div class="panel" id="panel-shop">
+    <div class="shop-bar">
+      <input class="shop-in" id="shopIn" placeholder="Add to grocery list..." onkeydown="if(event.key==='Enter')addShop()"/>
+      <button class="shop-add" onclick="addShop()">Add</button>
+    </div>
+    <div class="shop-sec-title">Groceries</div>
+    <div id="grocList">
+      <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Chicken breast</div><div class="sp">~$12</div></div>
+      <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Rice</div><div class="sp">~$4</div></div>
+      <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Mixed vegetables</div><div class="sp">~$8</div></div>
+      <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Eggs</div><div class="sp">~$5</div></div>
+      <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Milk</div><div class="sp">~$4</div></div>
+    </div>
+    <div class="shop-sec-title" style="margin-top:8px">Household</div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Paper towels</div><div class="sp">~$6</div></div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Dish soap</div><div class="sp">~$3</div></div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Laundry detergent</div><div class="sp">~$12</div></div>
+    <div class="shop-sec-title" style="margin-top:8px">Moving Prep</div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Moving boxes — pack of 10</div><div class="sp">~$20</div></div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Packing tape</div><div class="sp">~$8</div></div>
+    <div class="si"><div class="sbox" onclick="toggleShop(this)"></div><div class="sn">Bubble wrap</div><div class="sp">~$15</div></div>
+  </div>
+
+</div>
+<script>
+const d=new Date();
+document.getElementById('dateEl').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+function switchTab(n,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+n).classList.add('active');el.classList.add('active');
+}
+function switchTabByName(n){
+  const tabs=document.querySelectorAll('.tab');
+  ['home','housing','budget','school','family','shop'].forEach((name,i)=>{if(name===n)switchTab(n,tabs[i]);});
+}
+function toggleTask(el){
+  el.classList.toggle('done');el.textContent=el.classList.contains('done')?'✓':'';
+  const n=el.parentElement.querySelector('.tname');if(n)n.classList.toggle('done');
+}
+function toggleShop(el){
+  el.classList.toggle('got');el.textContent=el.classList.contains('got')?'✓':'';
+  const n=el.nextElementSibling;if(n)n.classList.toggle('got');
+}
+function addShop(){
+  const inp=document.getElementById('shopIn'),v=inp.value.trim();if(!v)return;
+  const l=document.getElementById('grocList');
+  const d=document.createElement('div');d.className='si';
+  d.innerHTML=`<div class="sbox" onclick="toggleShop(this)"></div><div class="sn">${v}</div><div class="sp"></div>`;
+  l.appendChild(d);inp.value='';
+}
+function updateSavings(){
+  const s=parseFloat(document.getElementById('sAmt').value)||0;
+  const p=Math.min(100,Math.round(s/35));
+  document.getElementById('sPct').textContent=p+'%';
+  document.getElementById('sFill').style.width=p+'%';
+}
+function addFamilyTask(){
+  const n=prompt('New task:');if(!n)return;
+  const addRow=document.querySelector('#panel-family .add-row');
+  const d=document.createElement('div');d.className='task';
+  d.innerHTML=`<div class="tbox" onclick="toggleTask(this)"></div><div class="tbody"><div class="tname">${n}</div><div class="tmeta">Added now</div></div><span class="tbadge tb-low">New</span>`;
+  addRow.parentElement.insertBefore(d,addRow);
+}
+const tips=[
+  '"Nationwide Guarantors confirmed tonight: 570 credit is not a factor. Income-driven only. You qualify. Landis gets called tomorrow."',
+  '"Landis requires 550 credit minimum. You are at 570. You qualify today, right now, as-is."',
+  '"4 private landlords found in 27615/27616 at $1,595–$1,765. Send your packet this weekend."',
+  '"Sign up for LegalShield tonight. The 30-day clock needs to start now."',
+  '"Your application packet is more complete than 90% of applicants. You have receipts."',
+  '"Unit Test 4 is in 3 days. Block Saturday morning. Performance appraisal + incentive pay. You know this."',
+  '"Aqua-Tots confirmed: Coach Ruthie is still there. SNAP program for your son. Mon/Wed/Thu mornings available."'
+];
+let ti=0;
+const te=document.getElementById('aiTip');
+te.style.transition='opacity .4s';
+setInterval(()=>{te.style.opacity=0;setTimeout(()=>{ti=(ti+1)%tips.length;te.textContent=tips[ti];te.style.opacity=1;},400);},9000);
+setTimeout(()=>{document.querySelectorAll('.prog-fill').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>{el.style.width=w;},200);});},300);
+async function askAI(){
+  const q=document.getElementById('aiQ').value.trim();if(!q)return;
+  const r=document.getElementById('aiR');r.style.display='block';r.textContent='One moment...';
+  document.getElementById('aiQ').value='';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`You are Bri, a warm family assistant for the McMillian household in Raleigh, NC. Kamari McMillian is Executive Chef at Georgio's Pizza Bar earning $65k/year. Brianna is a full-time Wake Tech student studying HR Management. They have one child. Moving target June 1 2026. Resolved eviction judgment Oct 2025 paid in full in 10 days. Credit ~570. Landis rent-to-own qualifies them now (550 min). Nationwide Guarantors confirmed tonight — income-driven, 570 not a factor. 13 Duckbill tasks running. LegalShield signup is tonight. Unit Test 4 due April 5. Aqua-Tots swim school researched — Coach Ruthie available, SNAP program. Be warm, brief, practical — 2-4 sentences.`,messages:[{role:'user',content:q}]})});
+    const data=await res.json();
+    r.textContent=data.content?.[0]?.text||'Ask me about budget, housing, school or your son\'s swim lessons — I am here.';
+  }catch(e){r.textContent='I am here. Ask me anything about your budget, housing search, school, or family.';}
+}
+</script>
+</body>
+</html>
