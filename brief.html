@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brianna's Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ivory:#F9F7F3;--paper:#F2EFE9;--line:#E0DBD3;--muted:#A39990;--brown:#6B5E56;--ink:#1A1614;--white:#FFFFFF;--success:#4A7C59;--warn:#B5714A;--danger:#A33030;--gold:#9E7A3F;--info:#3A6EA5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+.app{max-width:780px;margin:0 auto;padding:0 16px 120px}
+
+/* HEADER */
+.hdr{padding:32px 0 20px;border-bottom:2px solid var(--ink)}
+.hdr-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:8px}
+.hdr-title{font-family:'Playfair Display',serif;font-size:clamp(36px,9vw,60px);font-weight:900;line-height:.95;color:var(--ink);letter-spacing:-1px}
+.hdr-title em{font-style:italic;font-weight:400}
+.hdr-sub{font-size:12px;color:var(--muted);margin-top:10px}
+.hdr-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* ALERT */
+.alert{background:var(--ink);color:var(--ivory);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.alert-text{font-size:13px;font-weight:500;line-height:1.4}
+.alert-text strong{font-weight:700}
+
+/* COUNTDOWN */
+.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:12px 0}
+.cd-cell{background:var(--white);padding:14px 8px;text-align:center}
+.cd-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+.cd-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:3px}
+
+/* SECTION */
+.sec{padding:24px 0 0}
+.sec-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600;padding-bottom:10px;border-bottom:1px solid var(--line)}
+
+/* FOCUS BLOCK */
+.focus{color:var(--ivory);padding:22px;margin:12px 0;position:relative;overflow:hidden}
+.focus-ink{background:var(--ink)}
+.focus-brown{background:var(--brown)}
+.focus-ghost{font-family:'Playfair Display',serif;font-size:80px;font-weight:900;opacity:.08;position:absolute;right:16px;top:8px;pointer-events:none}
+.focus-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px}
+.focus-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.focus-detail{font-size:12px;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:14px}
+.focus-btn{display:inline-block;background:var(--ivory);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 20px;text-decoration:none}
+
+/* TASKS */
+.task{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:none}
+.tbox{width:18px;height:18px;border:1.5px solid var(--line);border-radius:3px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s;margin-top:2px}
+.tbox.done{background:var(--ink);border-color:var(--ink);color:var(--ivory)}
+.tbody{flex:1}
+.tname{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4}
+.tname.done{text-decoration:line-through;color:var(--muted)}
+.tmeta{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+.tbadge{font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;border-radius:2px;flex-shrink:0;margin-top:2px}
+.tb-fire{background:var(--ink);color:var(--ivory)}
+.tb-warn{background:#F5EDE5;color:var(--warn);border:1px solid #E8D5C4}
+.tb-muted{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+/* STATUS CARDS */
+.scard{border:1px solid var(--line);background:var(--white);padding:16px;margin-bottom:1px}
+.scard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.scard-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.scard-detail{font-size:12px;color:var(--muted);line-height:1.7}
+.scard-detail strong{color:var(--ink);font-weight:500}
+
+/* TAGS */
+.tag{display:inline-flex;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.t-green{background:#EAF2EC;color:var(--success)}
+.t-warn{background:#F5EDE5;color:var(--warn)}
+.t-gold{background:#F4EEE2;color:var(--gold)}
+.t-muted{background:var(--paper);color:var(--muted)}
+.t-ink{background:var(--ink);color:var(--ivory)}
+.t-info{background:#E8EFF6;color:var(--info)}
+.t-danger{background:#FAECEC;color:var(--danger)}
+
+/* DUCKBILL */
+.db-update{background:var(--paper);border-left:3px solid var(--ink);padding:14px 16px;margin-bottom:1px}
+.db-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px}
+.db-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.db-text{font-size:12px;color:var(--brown);line-height:1.7}
+.db-text strong{color:var(--ink);font-weight:600}
+
+/* BUDGET GRID */
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:12px}
+.g3-cell{background:var(--white);padding:14px;text-align:center}
+.g3-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.g3-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:3px}
+
+/* QUOTE */
+.quote{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;margin:24px 0;text-align:center}
+.quote-text{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:var(--brown);line-height:1.5}
+.quote-attr{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+/* NAV */
+.nav-back{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:16px 0;text-decoration:none}
+
+/* ============================================
+   ADMIN PANEL
+   ============================================ */
+
+/* LOCK SCREEN */
+.lock-screen{position:fixed;inset:0;background:var(--ink);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;display:none}
+.lock-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ivory);text-align:center}
+.lock-sub{font-size:12px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;text-align:center}
+.lock-input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--ivory);font-size:16px;font-family:'DM Sans',sans-serif;padding:14px 20px;width:260px;text-align:center;outline:none;border-radius:0;letter-spacing:4px}
+.lock-input::placeholder{letter-spacing:1px;color:rgba(255,255,255,.3)}
+.lock-btn{background:var(--ivory);color:var(--ink);border:none;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 32px;cursor:pointer;font-family:'DM Sans',sans-serif;width:260px}
+.lock-error{font-size:12px;color:#ff6b6b;text-align:center;display:none}
+
+/* FAB — floating admin button */
+.fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,.3);transition:transform .2s}
+.fab:hover{transform:scale(1.05)}
+.fab-icon{color:var(--ivory);font-size:20px;line-height:1}
+.fab-badge{position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--warn);border-radius:50%;font-size:8px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center}
+
+/* ADMIN DRAWER */
+.admin-drawer{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:2px solid var(--ink);z-index:600;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto}
+.admin-drawer.open{transform:translateY(0)}
+.admin-hdr{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--line);padding-bottom:14px}
+.admin-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
+.admin-close{font-size:22px;cursor:pointer;color:var(--muted);line-height:1;padding:4px 8px}
+.admin-close:hover{color:var(--ink)}
+.admin-body{padding:16px 20px 40px}
+
+/* ADMIN TABS */
+.admin-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.admin-tabs::-webkit-scrollbar{display:none}
+.admin-tab{flex-shrink:0;padding:10px 16px;font-size:11px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.admin-tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.admin-section{display:none}
+.admin-section.active{display:block}
+
+/* ADMIN FORM ELEMENTS */
+.admin-field{margin-bottom:14px}
+.admin-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px;display:block}
+.admin-input{width:100%;background:var(--ivory);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none}
+.admin-input:focus{border-color:var(--brown)}
+.admin-textarea{width:100%;background:var(--ivory);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:80px}
+.admin-textarea:focus{border-color:var(--brown)}
+.admin-select{width:100%;background:var(--ivory);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer}
+.admin-btn{background:var(--ink);border:none;color:var(--ivory);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:12px 24px;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;margin-top:4px}
+.admin-btn:hover{background:var(--brown)}
+.admin-btn-sm{background:var(--paper);border:1px solid var(--line);color:var(--brown);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.admin-btn-danger{background:var(--paper);border:1px solid #F5EDE5;color:var(--danger);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.admin-success{font-size:12px;color:var(--success);margin-top:8px;display:none;font-weight:500}
+
+/* TASK LIST IN ADMIN */
+.admin-task-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.admin-task-item:last-child{border-bottom:none}
+.admin-task-name{flex:1;font-size:12px;font-weight:500}
+.admin-task-meta{font-size:10px;color:var(--muted)}
+
+/* HOUSING ITEM IN ADMIN */
+.admin-prop-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.admin-prop-item:last-child{border-bottom:none}
+.admin-prop-name{flex:1;font-size:12px;font-weight:500}
+
+/* DUCKBILL ITEM IN ADMIN */
+.admin-db-item{padding:10px 0;border-bottom:1px solid var(--line)}
+.admin-db-item:last-child{border-bottom:none}
+.admin-db-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.admin-db-status{font-size:11px;color:var(--muted)}
+
+/* DIVIDER */
+.admin-divider{height:1px;background:var(--line);margin:16px 0}
+.admin-section-title{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-sub">McMillian Family HQ</div>
+  <div class="lock-title">Admin Access</div>
+  <input class="lock-input" id="lockInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()"/>
+  <button class="lock-btn" onclick="unlock()">Unlock</button>
+  <div class="lock-error" id="lockError">Wrong password. Try again.</div>
+</div>
+
+<!-- FLOATING ADMIN BUTTON -->
+<div class="fab" id="adminFab" onclick="openAdmin()" style="display:none">
+  <span class="fab-icon">⚙</span>
+  <span class="fab-badge" id="pendingCount">0</span>
+</div>
+
+<!-- ADMIN DRAWER -->
+<div class="admin-drawer" id="adminDrawer">
+  <div class="admin-hdr">
+    <div class="admin-title">Admin Panel</div>
+    <div class="admin-close" onclick="closeAdmin()">✕</div>
+  </div>
+  <div class="admin-body">
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" onclick="adminTab('tasks',this)">Tasks</div>
+      <div class="admin-tab" onclick="adminTab('housing',this)">Housing</div>
+      <div class="admin-tab" onclick="adminTab('duckbill',this)">Duckbill</div>
+      <div class="admin-tab" onclick="adminTab('quote',this)">Quote</div>
+      <div class="admin-tab" onclick="adminTab('add',this)">+ Add</div>
+    </div>
+
+    <!-- TASKS TAB -->
+    <div class="admin-section active" id="admin-tasks">
+      <div class="admin-section-title">Current Tasks</div>
+      <div id="adminTaskList"></div>
+      <div class="admin-divider"></div>
+      <div class="admin-section-title">Add New Task</div>
+      <div class="admin-field">
+        <label class="admin-label">Task name</label>
+        <input class="admin-input" id="newTaskName" placeholder="What needs to get done?"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Note / detail</label>
+        <input class="admin-input" id="newTaskMeta" placeholder="Optional detail"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Priority</label>
+        <select class="admin-select" id="newTaskPriority">
+          <option value="tb-fire">🔥 Urgent — Tonight</option>
+          <option value="tb-warn">⚠️ Soon</option>
+          <option value="tb-muted">Later</option>
+        </select>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Badge label</label>
+        <input class="admin-input" id="newTaskBadge" placeholder="e.g. Tonight, Monday, Apr 5"/>
+      </div>
+      <button class="admin-btn" onclick="addTask()">Add Task</button>
+      <div class="admin-success" id="taskSuccess">Task added ✓</div>
+    </div>
+
+    <!-- HOUSING TAB -->
+    <div class="admin-section" id="admin-housing">
+      <div class="admin-section-title">Update Property Status</div>
+      <div id="adminHousingList"></div>
+      <div class="admin-divider"></div>
+      <div class="admin-section-title">Add New Property</div>
+      <div class="admin-field">
+        <label class="admin-label">Property name</label>
+        <input class="admin-input" id="newPropName" placeholder="Property name"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Details</label>
+        <input class="admin-input" id="newPropDetail" placeholder="Address, price, notes"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Status</label>
+        <select class="admin-select" id="newPropStatus">
+          <option value="t-gold">⏳ Pending</option>
+          <option value="t-green">✅ Yes — Approved</option>
+          <option value="t-danger">❌ Hard No</option>
+          <option value="t-info">📞 Calling</option>
+          <option value="t-ink">⭐ Priority</option>
+          <option value="t-warn">⚠️ Need More Info</option>
+        </select>
+      </div>
+      <button class="admin-btn" onclick="addProperty()">Add Property</button>
+      <div class="admin-success" id="propSuccess">Property added ✓</div>
+    </div>
+
+    <!-- DUCKBILL TAB -->
+    <div class="admin-section" id="admin-duckbill">
+      <div class="admin-section-title">Add Duckbill Update</div>
+      <div class="admin-field">
+        <label class="admin-label">Task / Call name</label>
+        <input class="admin-input" id="dbName" placeholder="e.g. Landis Rent-to-Own"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Status label</label>
+        <input class="admin-input" id="dbStatusLabel" placeholder="e.g. ✅ Confirmed Tonight"/>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Result type</label>
+        <select class="admin-select" id="dbColor">
+          <option value="var(--success)">✅ Green — Confirmed / Done</option>
+          <option value="var(--gold)">⏳ Gold — Pending / Calling</option>
+          <option value="var(--warn)">⚠️ Orange — Needs Action</option>
+          <option value="var(--info)">ℹ️ Blue — Info / Research</option>
+          <option value="var(--danger)">❌ Red — Hard No</option>
+        </select>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Full update text</label>
+        <textarea class="admin-textarea" id="dbBody" placeholder="Paste the full Duckbill update here..."></textarea>
+      </div>
+      <button class="admin-btn" onclick="addDuckbillUpdate()">Add Update</button>
+      <div class="admin-success" id="dbSuccess">Update added ✓</div>
+    </div>
+
+    <!-- QUOTE TAB -->
+    <div class="admin-section" id="admin-quote">
+      <div class="admin-section-title">Update Motivational Quote</div>
+      <div class="admin-field">
+        <label class="admin-label">Quote text</label>
+        <textarea class="admin-textarea" id="quoteText" placeholder="Enter new quote..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label">Attribution</label>
+        <input class="admin-input" id="quoteAttr" placeholder="e.g. Operation New Home · April 2026"/>
+      </div>
+      <button class="admin-btn" onclick="updateQuote()">Update Quote</button>
+      <div class="admin-success" id="quoteSuccess">Quote updated ✓</div>
+    </div>
+
+    <!-- ADD EXTRAS TAB -->
+    <div class="admin-section" id="admin-add">
+      <div class="admin-section-title">Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <button class="admin-btn" onclick="clearAllDone()">Clear all completed tasks</button>
+        <button class="admin-btn" style="background:var(--brown)" onclick="lockAdmin()">Lock admin panel</button>
+      </div>
+      <div class="admin-divider"></div>
+      <div class="admin-section-title">Alert Message</div>
+      <div class="admin-field">
+        <label class="admin-label">Alert text (top of page)</label>
+        <textarea class="admin-textarea" id="alertText" placeholder="Update the urgent alert at the top..." style="min-height:60px"></textarea>
+      </div>
+      <button class="admin-btn" onclick="updateAlert()">Update Alert</button>
+      <div class="admin-success" id="alertSuccess">Alert updated ✓</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="app">
+
+  <div class="hdr">
+    <div class="hdr-eye">McMillian Family HQ</div>
+    <div class="hdr-title">Brianna's<br><em>Brief</em></div>
+    <div class="hdr-sub">Everything that needs your attention — right now</div>
+    <div class="hdr-date" id="dateEl"></div>
+  </div>
+
+  <div class="alert" id="alertBar">
+    <div class="alert-text" id="alertText-display"><strong>⚡ 3 things need you tonight.</strong> LegalShield signup · Ledger screenshots · Brief Kamari. Everything else runs while you sleep.</div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="sec">
+    <div class="sec-label">Days until June 1 move-in</div>
+    <div class="countdown">
+      <div class="cd-cell"><div class="cd-num" id="cdDays">--</div><div class="cd-lbl">Days</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cdHours">--</div><div class="cd-lbl">Hours</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cdMins">--</div><div class="cd-lbl">Minutes</div></div>
+      <div class="cd-cell"><div class="cd-num">🏠</div><div class="cd-lbl">Target</div></div>
+    </div>
+  </div>
+
+  <!-- TONIGHT -->
+  <div class="sec">
+    <div class="sec-label">Do this now — tonight</div>
+    <div class="focus focus-ink" style="margin-top:12px">
+      <div class="focus-ghost">1</div>
+      <div class="focus-label">Most urgent action</div>
+      <div class="focus-title">Sign up for LegalShield</div>
+      <div class="focus-detail">$35/mo at legalshield.com. Once you have your membership number, Duckbill calls the attorney line about Case No. 25CV033791-910. The 30-day clock starts the moment you sign up.</div>
+      <a class="focus-btn" href="https://legalshield.com" target="_blank">Go to legalshield.com →</a>
+    </div>
+    <div id="taskList">
+      <div class="task" data-id="t1">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">Save all 10 ledger screenshots into one album</div><div class="tmeta">Name: "Ammons Pittman Ledger 2022–2026"</div></div>
+        <span class="tbadge tb-fire">Tonight</span>
+      </div>
+      <div class="task" data-id="t2">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">Brief Kamari on the full housing plan</div><div class="tmeta">Show him the dashboard · Duckbill tasks · Landis option</div></div>
+        <span class="tbadge tb-fire">Tonight</span>
+      </div>
+      <div class="task" data-id="t3">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">Apply to Landis — free, no credit impact</div><div class="tmeta">landis.com · Start before Duckbill calls them tomorrow</div></div>
+        <span class="tbadge tb-warn">Tonight</span>
+      </div>
+      <div class="task" data-id="t4">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">HRM Unit Test 4 — Chapters 10 & 11</div><div class="tmeta">Blackboard · Due April 5 · Block Saturday AM to study</div></div>
+        <span class="tbadge tb-fire">Apr 5</span>
+      </div>
+      <div class="task" data-id="t5">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">Nationwide Guarantors free pre-screen</div><div class="tmeta">nationwideguarantors.com · Upload income docs · Free</div></div>
+        <span class="tbadge tb-warn">Monday</span>
+      </div>
+      <div class="task" data-id="t6">
+        <div class="tbox" onclick="toggleTask(this)"></div>
+        <div class="tbody"><div class="tname">Send packet to all 4 private landlords</div><div class="tmeta">All 3 letters + ledger + court record + pay stubs</div></div>
+        <span class="tbadge tb-warn">Weekend</span>
+      </div>
+    </div>
+    <div id="extraTasks"></div>
+  </div>
+
+  <!-- DUCKBILL UPDATES -->
+  <div class="sec">
+    <div class="sec-label">Duckbill — latest results</div>
+    <div id="duckbillList" style="margin-top:12px">
+      <div class="db-update" style="border-left-color:var(--success)">
+        <div class="db-label">✅ Nationwide Guarantors — Confirmed Tonight</div>
+        <div class="db-title">570 credit score is NOT a factor in their approval</div>
+        <div class="db-text"><strong>Credit:</strong> Purely income-driven. 570 is irrelevant.<br><strong>Judgment:</strong> Not automatic denial — reviewed case by case.<br><strong>Fee:</strong> One month's rent upfront.<br><strong>Timeline:</strong> Decision under 24 business hours.<br><strong>Your next step →</strong> nationwideguarantors.com · Upload income docs.</div>
+      </div>
+      <div class="db-update" style="margin-top:1px;border-left-color:var(--gold)">
+        <div class="db-label">⏳ Landis Rent-to-Own — Calling Tomorrow</div>
+        <div class="db-title">12 questions queued · This is the most important call</div>
+        <div class="db-text">Duckbill will confirm: qualify at 570 + $65k, home budget, June 1 feasibility, eviction impact, deposit in real dollars. <strong>Check back tomorrow afternoon.</strong></div>
+      </div>
+      <div class="db-update" style="margin-top:1px;border-left-color:var(--gold)">
+        <div class="db-label">⏳ Properties — All Calling Tomorrow AM</div>
+        <div class="db-title">Edwards Mill · Conclave · Fox Crossing · Autumn Pointe · Tree Top</div>
+        <div class="db-text">First question to every property: automatic denial or case by case? <strong>No application fees until Duckbill has real verbal answers.</strong></div>
+      </div>
+      <div class="db-update" style="margin-top:1px;border-left-color:var(--success)">
+        <div class="db-label">✅ Aqua-Tots Swim School — Complete</div>
+        <div class="db-title">Coach Ruthie is still there · SNAP program for your son</div>
+        <div class="db-text">1-on-1 lessons · Same instructor weekly ✓ · Mon/Wed/Thu mornings · Trial class available · <strong>$308/mo after discount · 919-447-1100</strong></div>
+      </div>
+      <div class="db-update" style="margin-top:1px;border-left-color:var(--warn)">
+        <div class="db-label">⏳ Verizon + Insurance — Needs Your Go-Ahead</div>
+        <div class="db-title">Authorize 3-way call in the Duckbill app</div>
+        <div class="db-text">Could save $35–$60/mo combined. They do the talking — you just need to authorize.</div>
+      </div>
+    </div>
+    <div id="extraDuckbill"></div>
+  </div>
+
+  <!-- SCHOOL -->
+  <div class="sec">
+    <div class="sec-label">School — 3 days away</div>
+    <div class="focus focus-brown" style="margin-top:12px">
+      <div class="focus-ghost">!</div>
+      <div class="focus-label">Due April 5</div>
+      <div class="focus-title">HRM Unit Test 4 + Blackboard</div>
+      <div class="focus-detail">Comp & Benefits · Ch 10 = Performance appraisal · Ch 11 = Incentive pay. Block Saturday morning. You know this material.</div>
+    </div>
+  </div>
+
+  <!-- HOUSING -->
+  <div class="sec">
+    <div class="sec-label">Housing status board</div>
+    <div id="housingList" style="margin-top:12px">
+      <div class="scard" style="border-color:var(--ink)">
+        <div class="scard-top"><div class="scard-name">Landis Rent-to-Own ✦</div><span class="tag t-ink">Priority #1</span></div>
+        <div class="scard-detail"><strong>Qualifies now:</strong> 570 credit ✓ · $65k income ✓ · NC ✓ · No bankruptcies ✓<br>Apply free at landis.com. Duckbill calling tomorrow. June 1 + homeownership path.</div>
+      </div>
+      <div class="scard">
+        <div class="scard-top"><div class="scard-name">Nationwide Guarantors</div><span class="tag t-green">Green Light ✓</span></div>
+        <div class="scard-detail"><strong>Confirmed:</strong> Income-driven only. 570 = irrelevant. Judgment = case by case. Complete pre-screen at nationwideguarantors.com.</div>
+      </div>
+      <div class="scard">
+        <div class="scard-top"><div class="scard-name">Edwards Mill · Conclave · Fox Crossing</div><span class="tag t-gold">Calling Tomorrow</span></div>
+        <div class="scard-detail">Waiting on real eviction policy answers. No app fees until confirmed.</div>
+      </div>
+      <div class="scard">
+        <div class="scard-top"><div class="scard-name">Autumn Pointe · Tree Top · Perry Hill</div><span class="tag t-info">Second Chance</span></div>
+        <div class="scard-detail">All 3 on Wake County second-chance lists. Perry Hill (984-367-9904) most flexible.</div>
+      </div>
+      <div class="scard">
+        <div class="scard-top"><div class="scard-name">4 Private Landlords — 27615/27616</div><span class="tag t-gold">Send Packet</span></div>
+        <div class="scard-detail">9005 Grassington Way $1,750 · 130 Wythe Cir $1,765 · 8011 Allyns Landing $1,595 · 2960 Berkeley Springs $1,650. Send full packet this weekend.</div>
+      </div>
+      <div class="scard">
+        <div class="scard-top"><div class="scard-name">Autumn Ridge</div><span class="tag t-danger">Hard No</span></div>
+        <div class="scard-detail">Auto denial for any eviction filing. Removed from list.</div>
+      </div>
+    </div>
+    <div id="extraHousing"></div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="sec">
+    <div class="sec-label">Budget snapshot</div>
+    <div class="g3">
+      <div class="g3-cell"><div class="g3-num">$5,417</div><div class="g3-lbl">Monthly income</div></div>
+      <div class="g3-cell"><div class="g3-num">$400</div><div class="g3-lbl">Weekly savings</div></div>
+      <div class="g3-cell"><div class="g3-num">$3,500</div><div class="g3-lbl">Moving fund goal</div></div>
+    </div>
+  </div>
+
+  <div class="quote" id="quoteBlock">
+    <div class="quote-text" id="quoteTextDisplay">"You are not paralyzed. You are prepared. Every no gets us closer to the yes that is waiting."</div>
+    <div class="quote-attr" id="quoteAttrDisplay">Operation New Home · April 2026</div>
+  </div>
+
+  <div style="text-align:center">
+    <a class="nav-back" href="index.html">← Back to McMillian Family HQ</a>
+  </div>
+
+</div>
+
+<script>
+/* =====================
+   STATE
+   ===================== */
+const ADMIN_PASSWORD = 'mcmillian2026';
+let isAdmin = false;
+let tasks = [];
+let extraProperties = [];
+let extraDuckbill = [];
+
+/* =====================
+   INIT
+   ===================== */
+window.onload = function() {
+  // Date
+  const d = new Date();
+  document.getElementById('dateEl').textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+
+  // Countdown
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // Load saved state
+  loadState();
+
+  // Render admin lists
+  renderAdminTaskList();
+  renderAdminHousingList();
+};
+
+/* =====================
+   COUNTDOWN
+   ===================== */
+function updateCountdown() {
+  const target = new Date('2026-06-01T00:00:00-04:00');
+  const now = new Date();
+  const diff = target - now;
+  if(diff <= 0) return;
+  document.getElementById('cdDays').textContent = Math.floor(diff/(1000*60*60*24));
+  document.getElementById('cdHours').textContent = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  document.getElementById('cdMins').textContent = Math.floor((diff%(1000*60*60))/(1000*60));
+}
+
+/* =====================
+   PERSIST STATE
+   ===================== */
+function saveState() {
+  try {
+    const state = {
+      taskDone: getTaskDoneState(),
+      extraTasks: getExtraTasks(),
+      extraProperties: extraProperties,
+      extraDuckbill: extraDuckbill,
+      quote: {
+        text: document.getElementById('quoteTextDisplay').textContent,
+        attr: document.getElementById('quoteAttrDisplay').textContent
+      },
+      alert: document.getElementById('alertText-display').innerHTML
+    };
+    localStorage.setItem('mcmillian_brief', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('mcmillian_brief');
+    if(!raw) return;
+    const state = JSON.parse(raw);
+
+    // Restore task done states
+    if(state.taskDone) {
+      Object.keys(state.taskDone).forEach(id => {
+        const el = document.querySelector(`.task[data-id="${id}"] .tbox`);
+        if(el && state.taskDone[id]) {
+          el.classList.add('done');
+          el.textContent = '✓';
+          el.parentElement.querySelector('.tname')?.classList.add('done');
+        }
+      });
+    }
+
+    // Restore extra tasks
+    if(state.extraTasks) {
+      state.extraTasks.forEach(t => appendTask(t.name, t.meta, t.badge, t.badgeClass, t.id, t.done));
+    }
+
+    // Restore extra properties
+    if(state.extraProperties) {
+      extraProperties = state.extraProperties;
+      extraProperties.forEach(p => appendProperty(p.name, p.detail, p.statusClass, p.statusLabel, p.id));
+    }
+
+    // Restore extra duckbill
+    if(state.extraDuckbill) {
+      extraDuckbill = state.extraDuckbill;
+      extraDuckbill.forEach(d => appendDuckbill(d.label, d.title, d.body, d.color, d.id));
+    }
+
+    // Restore quote
+    if(state.quote) {
+      document.getElementById('quoteTextDisplay').textContent = state.quote.text;
+      document.getElementById('quoteAttrDisplay').textContent = state.quote.attr;
+    }
+
+    // Restore alert
+    if(state.alert) {
+      document.getElementById('alertText-display').innerHTML = state.alert;
+    }
+  } catch(e) {}
+}
+
+function getTaskDoneState() {
+  const state = {};
+  document.querySelectorAll('.task[data-id]').forEach(t => {
+    state[t.dataset.id] = t.querySelector('.tbox').classList.contains('done');
+  });
+  return state;
+}
+
+function getExtraTasks() {
+  const tasks = [];
+  document.querySelectorAll('#extraTasks .task[data-id]').forEach(t => {
+    tasks.push({
+      id: t.dataset.id,
+      name: t.querySelector('.tname').textContent,
+      meta: t.querySelector('.tmeta')?.textContent || '',
+      badge: t.querySelector('.tbadge')?.textContent || '',
+      badgeClass: t.querySelector('.tbadge')?.className.replace('tbadge ','') || 'tb-muted',
+      done: t.querySelector('.tbox').classList.contains('done')
+    });
+  });
+  return tasks;
+}
+
+/* =====================
+   TASKS
+   ===================== */
+function toggleTask(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  const n = el.parentElement.querySelector('.tname');
+  if(n) n.classList.toggle('done');
+  saveState();
+  updatePendingCount();
+}
+
+function appendTask(name, meta, badge, badgeClass, id, done) {
+  const container = document.getElementById('extraTasks');
+  const div = document.createElement('div');
+  div.className = 'task';
+  div.dataset.id = id;
+  div.innerHTML = `<div class="tbox${done?' done':''}" onclick="toggleTask(this)">${done?'✓':''}</div><div class="tbody"><div class="tname${done?' done':''}">${name}</div><div class="tmeta">${meta}</div></div><span class="tbadge ${badgeClass}">${badge}</span>`;
+  container.appendChild(div);
+}
+
+function addTask() {
+  const name = document.getElementById('newTaskName').value.trim();
+  if(!name) return;
+  const meta = document.getElementById('newTaskMeta').value.trim();
+  const badge = document.getElementById('newTaskBadge').value.trim() || 'New';
+  const badgeClass = document.getElementById('newTaskPriority').value;
+  const id = 'extra_' + Date.now();
+
+  appendTask(name, meta, badge, badgeClass, id, false);
+
+  document.getElementById('newTaskName').value = '';
+  document.getElementById('newTaskMeta').value = '';
+  document.getElementById('newTaskBadge').value = '';
+
+  saveState();
+  renderAdminTaskList();
+  updatePendingCount();
+
+  const s = document.getElementById('taskSuccess');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+}
+
+function clearAllDone() {
+  document.querySelectorAll('.task').forEach(t => {
+    if(t.querySelector('.tbox')?.classList.contains('done')) {
+      t.style.opacity = '0';
+      setTimeout(() => t.remove(), 300);
+    }
+  });
+  setTimeout(() => { saveState(); renderAdminTaskList(); }, 400);
+}
+
+function renderAdminTaskList() {
+  const container = document.getElementById('adminTaskList');
+  container.innerHTML = '';
+  document.querySelectorAll('.task[data-id]').forEach(t => {
+    const name = t.querySelector('.tname').textContent;
+    const done = t.querySelector('.tbox').classList.contains('done');
+    const id = t.dataset.id;
+    const div = document.createElement('div');
+    div.className = 'admin-task-item';
+    div.innerHTML = `<div class="admin-task-name">${name}</div><div class="admin-task-meta">${done?'✓ Done':'Pending'}</div><button class="admin-btn-sm" onclick="toggleTaskById('${id}')">Toggle</button>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleTaskById(id) {
+  const el = document.querySelector(`.task[data-id="${id}"] .tbox`);
+  if(el) { toggleTask(el); renderAdminTaskList(); }
+}
+
+/* =====================
+   HOUSING
+   ===================== */
+const statusLabels = {
+  't-gold': 'Pending', 't-green': 'Yes — Approved', 't-danger': 'Hard No',
+  't-info': 'Calling', 't-ink': 'Priority', 't-warn': 'Need More Info'
+};
+
+function appendProperty(name, detail, statusClass, statusLabel, id) {
+  const container = document.getElementById('extraHousing');
+  const div = document.createElement('div');
+  div.className = 'scard';
+  div.dataset.id = id;
+  div.innerHTML = `<div class="scard-top"><div class="scard-name">${name}</div><span class="tag ${statusClass}">${statusLabel}</span></div><div class="scard-detail">${detail}</div>`;
+  container.appendChild(div);
+}
+
+function addProperty() {
+  const name = document.getElementById('newPropName').value.trim();
+  if(!name) return;
+  const detail = document.getElementById('newPropDetail').value.trim();
+  const statusClass = document.getElementById('newPropStatus').value;
+  const statusLabel = statusLabels[statusClass] || 'Pending';
+  const id = 'prop_' + Date.now();
+
+  extraProperties.push({name, detail, statusClass, statusLabel, id});
+  appendProperty(name, detail, statusClass, statusLabel, id);
+
+  document.getElementById('newPropName').value = '';
+  document.getElementById('newPropDetail').value = '';
+  saveState();
+  renderAdminHousingList();
+
+  const s = document.getElementById('propSuccess');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+}
+
+function renderAdminHousingList() {
+  const container = document.getElementById('adminHousingList');
+  container.innerHTML = '';
+  extraProperties.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'admin-prop-item';
+    div.innerHTML = `<div class="admin-prop-name">${p.name}</div><select class="admin-select" style="width:140px;padding:4px 8px" onchange="updatePropStatus('${p.id}',this.value)">
+      <option value="t-gold"${p.statusClass==='t-gold'?' selected':''}>Pending</option>
+      <option value="t-green"${p.statusClass==='t-green'?' selected':''}>Approved ✅</option>
+      <option value="t-danger"${p.statusClass==='t-danger'?' selected':''}>Hard No ❌</option>
+      <option value="t-info"${p.statusClass==='t-info'?' selected':''}>Calling</option>
+    </select>`;
+    container.appendChild(div);
+  });
+}
+
+function updatePropStatus(id, newStatus) {
+  const p = extraProperties.find(x => x.id === id);
+  if(!p) return;
+  p.statusClass = newStatus;
+  p.statusLabel = statusLabels[newStatus] || 'Pending';
+  const el = document.querySelector(`.scard[data-id="${id}"] .tag`);
+  if(el) { el.className = `tag ${newStatus}`; el.textContent = p.statusLabel; }
+  saveState();
+}
+
+/* =====================
+   DUCKBILL
+   ===================== */
+function appendDuckbill(label, title, body, color, id) {
+  const container = document.getElementById('extraDuckbill');
+  const div = document.createElement('div');
+  div.className = 'db-update';
+  div.dataset.id = id;
+  div.style.cssText = `border-left-color:${color};margin-top:1px`;
+  div.innerHTML = `<div class="db-label">${label}</div><div class="db-title">${title}</div><div class="db-text">${body.replace(/\n/g,'<br>')}</div>`;
+  container.appendChild(div);
+}
+
+function addDuckbillUpdate() {
+  const label = document.getElementById('dbStatusLabel').value.trim();
+  const title = document.getElementById('dbName').value.trim();
+  const body = document.getElementById('dbBody').value.trim();
+  const color = document.getElementById('dbColor').value;
+  if(!title || !body) return;
+  const id = 'db_' + Date.now();
+
+  extraDuckbill.push({label, title, body, color, id});
+  appendDuckbill(label, title, body, color, id);
+
+  document.getElementById('dbStatusLabel').value = '';
+  document.getElementById('dbName').value = '';
+  document.getElementById('dbBody').value = '';
+  saveState();
+
+  const s = document.getElementById('dbSuccess');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+}
+
+/* =====================
+   QUOTE
+   ===================== */
+function updateQuote() {
+  const text = document.getElementById('quoteText').value.trim();
+  const attr = document.getElementById('quoteAttr').value.trim();
+  if(text) document.getElementById('quoteTextDisplay').textContent = `"${text}"`;
+  if(attr) document.getElementById('quoteAttrDisplay').textContent = attr;
+  saveState();
+  const s = document.getElementById('quoteSuccess');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+}
+
+/* =====================
+   ALERT
+   ===================== */
+function updateAlert() {
+  const text = document.getElementById('alertText').value.trim();
+  if(text) document.getElementById('alertText-display').innerHTML = `<strong>⚡</strong> ${text}`;
+  saveState();
+  const s = document.getElementById('alertSuccess');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+}
+
+/* =====================
+   PENDING COUNT
+   ===================== */
+function updatePendingCount() {
+  const pending = document.querySelectorAll('.task .tbox:not(.done)').length;
+  document.getElementById('pendingCount').textContent = pending;
+}
+updatePendingCount();
+
+/* =====================
+   ADMIN PANEL
+   ===================== */
+function openAdmin() {
+  if(!isAdmin) {
+    document.getElementById('lockScreen').style.display = 'flex';
+    document.getElementById('lockInput').focus();
+  } else {
+    document.getElementById('adminDrawer').classList.add('open');
+  }
+}
+
+function unlock() {
+  const pw = document.getElementById('lockInput').value;
+  if(pw === ADMIN_PASSWORD) {
+    isAdmin = true;
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('lockInput').value = '';
+    document.getElementById('lockError').style.display = 'none';
+    document.getElementById('adminDrawer').classList.add('open');
+  } else {
+    document.getElementById('lockError').style.display = 'block';
+    document.getElementById('lockInput').value = '';
+    document.getElementById('lockInput').focus();
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('adminDrawer').classList.remove('open');
+}
+
+function lockAdmin() {
+  isAdmin = false;
+  closeAdmin();
+}
+
+function adminTab(name, el) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('admin-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// Show FAB after brief delay
+setTimeout(() => {
+  document.getElementById('adminFab').style.display = 'flex';
+}, 500);
+
+// Keyboard shortcut — press 'A' 3 times fast to open admin
+let aCount = 0, aTimer;
+document.addEventListener('keydown', e => {
+  if(e.key === 'a' || e.key === 'A') {
+    aCount++;
+    clearTimeout(aTimer);
+    aTimer = setTimeout(() => aCount = 0, 1000);
+    if(aCount >= 3) { aCount = 0; openAdmin(); }
+  }
+  if(e.key === 'Escape') closeAdmin();
+});
+</script>
+</body>
+</html>
